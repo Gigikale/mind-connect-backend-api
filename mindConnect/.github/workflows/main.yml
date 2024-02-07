@@ -1,0 +1,34 @@
+name: Build & Deploy MindConnect App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build_deploy:
+    -name: Build and Deploy mindConnect
+    runs-on: ubuntu-latest
+
+    steps: actions/checkout@v3
+      
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: setupJDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'Corretto'
+          java-version: 17
+
+      - name: Unit Tests
+        run:
+        - mvn -B test --file pom.xml
+          mvn -B test --package src/test
+
+      - name: Build MindConnect Application
+        run: mvn -B package --file pom.xml
